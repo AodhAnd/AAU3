@@ -60,13 +60,11 @@ void Imu::readData(U8* buffer, unsigned int readLength, U8 fromReg)
 	mpI2C->readI2C(buffer,readLength,mI2cAddr);
 }
 
-U16 Imu::getAccX(void)
+signed int Imu::getAccX(void)
 {
 	U8 xAcc[2] = {0,0};
 	readData(xAcc,2,MPU6050_ACCEL_X_H);
 
-	U16 X;
-
-	return X;
+	return (xAcc[0]<<8 | xAcc[1]);
 }
 

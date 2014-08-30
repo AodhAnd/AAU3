@@ -66,7 +66,7 @@ public:
 
 
 	//get'ers
-	U16 getAccX(void);
+	signed int getAccX(void);
 	U16 getAccY(void);
 	U16 getAccZ(void);
 	accAll_t getAccAll(void);
