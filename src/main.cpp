@@ -22,18 +22,15 @@ int main()
 	I2C i2cIf("/dev/i2c-1");
 	Imu imu1(IMU1_ADDR,&i2cIf);
 
+	std::cout<< Imu::convertFromTwosComplement(0xFF,0xFF) << std::endl;
+	std::cout<< Imu::convertFromTwosComplement(0x7F,0xFF) << std::endl;
 
-	printf("sleepmode: %X\n",imu1.getSleepMode());
-	imu1.setSleepMode(true);
-	printf("sleepmode: %X\n",imu1.getSleepMode());
-
-
-
+/*
 	for(int i=0;i<10000;i++)
 	{
 		std::cout << (int)imu1.getAccX() << std::endl;
 	}
-
+*/
 	//initiate the threads
 
 	//wait for threads to get terminated

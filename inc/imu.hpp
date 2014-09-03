@@ -48,42 +48,43 @@ public:
 	~Imu();
 
 	typedef struct{
-		U16 X;
-		U16 Y;
-		U16 Z;
+		signed int X;
+		signed int Y;
+		signed int Z;
 	} accAll_t;
 
 	typedef struct{
-		U16 X;
-		U16 Y;
-		U16 Z;
+		signed int X;
+		signed int Y;
+		signed int Z;
 	} gyroAll_t;
 
 	typedef struct{
 		gyroAll_t gyro;
 		accAll_t acc;
-	}allSens_t;
+	} allSens_t;
 
 
 	//get'ers
 	signed int getAccX(void);
-	U16 getAccY(void);
-	U16 getAccZ(void);
+	signed int getAccY(void);
+	signed int getAccZ(void);
 	accAll_t getAccAll(void);
 
 
-	U16 getGyroX(void);
-	U16 getGyroY(void);
-	U16 getGyroZ(void);
+	signed int getGyroX(void);
+	signed int getGyroY(void);
+	signed int getGyroZ(void);
 	gyroAll_t getGyroAll(void);
 
 	allSens_t getAllSens(void);
 
-	U16 getTemp(void);
+	signed int getTemp(void);
 
 	//set'ers
-	void setSleepMode(bool mode);
+	void setSleep(bool mode);
 	U8 getSleepMode();
+	static signed int convertFromTwosComplement(U8 msb,U8 lsb);
 
 private:
 	I2C* mpI2C;
@@ -93,8 +94,6 @@ private:
 	void writeWord(U8 val, U8 fromReg);
 	void readByte(U8* buffer, U8 fromReg);
 	void readData(U8* buffer, unsigned int readLength, U8 fromReg);
-
-
 
 };
 

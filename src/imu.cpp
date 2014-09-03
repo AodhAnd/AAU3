@@ -19,18 +19,18 @@ Imu::Imu(U8 i2cAddr,I2C* i2cObj)
 mpI2C(i2cObj),
 mI2cAddr(i2cAddr)
 {
-	setSleepMode(false);
+	setSleep(false);
 	printf("IMU at 0x%X says hello..\n",i2cAddr);
 }
 
 Imu::~Imu()
 {
-	setSleepMode(true);
+	setSleep(true);
 }
 
-void Imu::setSleepMode(bool mode)
+void Imu::setSleep(bool mode)
 {
-	U8 val = mode?0x00:0x40;
+	U8 val = mode?0x40:0x00;
 	writeByte(val,MPU6050_PWR_MGMT_1);
 }
 
@@ -62,9 +62,51 @@ void Imu::readData(U8* buffer, unsigned int readLength, U8 fromReg)
 
 signed int Imu::getAccX(void)
 {
-	U8 xAcc[2] = {0,0};
-	readData(xAcc,2,MPU6050_ACCEL_X_H);
-
-	return (xAcc[0]<<8 | xAcc[1]);
+	U8 Acc[2] = {0,0};
+	readData(Acc,2,MPU6050_ACCEL_X_H);
+	return convertFromTwosComplement(Acc[0],Acc[1]);
 }
 
+signed int Imu::getAccY(void)
+{
+	U8 Acc[2] = {0,0};
+	readData(Acc,2,MPU6050_ACCEL_Y_H);
+	return convertFromTwosComplement(Acc[0],Acc[1]);
+}
+
+
+signed int Imu::getAccZ(void)
+{
+	U8 Acc[2] = {0,0};
+	readData(Acc,2,MPU6050_ACCEL_Z_H);
+	return convertFromTwosComplement(Acc[0],Acc[1]);
+}
+
+
+Imu::accAll_t Imu::getAccAll(void)
+{
+	accAll_t accel;
+	U8 buffer[6];
+	readData(buffer,6,MPU6050_ACCEL_X_H);
+	accel.X = convertFromTwosComplement(buffer[0],buffer[1]);
+	accel.Y = convertFromTwosComplement(buffer[2],buffer[3]);
+	accel.Z = convertFromTwosComplement(buffer[4],buffer[5]);
+	return accel;
+}
+
+signed int Imu::convertFromTwosComplement(U8 msb,U8 lsb)
+{
+	printf("IN: 0x%X 0x%X\n",msb,lsb);
+	signed int val = 0;
+	if(msb>>7 == 1)
+	{
+		val = - ( ((~msb & 0x7F) << 8 | ~lsb ) + 1 );
+		printf("OUT (neg): 0x%X 0x%X\n",(~msb & 0x7F),~lsb);
+	}
+	else
+	{
+		val = (msb & 0x7F)<<8 | lsb;
+		printf("OUT (pod): 0x%X 0x%X\n",(msb & 0x7F),lsb);
+	}
+	return val;
+}
