@@ -64,14 +64,14 @@ signed int Imu::getAccX(void)
 {
 	U8 Acc[2] = {0,0};
 	readData(Acc,2,MPU6050_ACCEL_X_H);
-	return convertFromTwosComplement(Acc[0],Acc[1]);
+	return Acc;
 }
 
 signed int Imu::getAccY(void)
 {
 	U8 Acc[2] = {0,0};
 	readData(Acc,2,MPU6050_ACCEL_Y_H);
-	return convertFromTwosComplement(Acc[0],Acc[1]);
+	return Acc;
 }
 
 
@@ -79,10 +79,10 @@ signed int Imu::getAccZ(void)
 {
 	U8 Acc[2] = {0,0};
 	readData(Acc,2,MPU6050_ACCEL_Z_H);
-	return convertFromTwosComplement(Acc[0],Acc[1]);
+	return Acc;
 }
 
-
+/*
 Imu::accAll_t Imu::getAccAll(void)
 {
 	accAll_t accel;
@@ -93,20 +93,4 @@ Imu::accAll_t Imu::getAccAll(void)
 	accel.Z = convertFromTwosComplement(buffer[4],buffer[5]);
 	return accel;
 }
-
-signed int Imu::convertFromTwosComplement(U8 msb,U8 lsb)
-{
-	printf("IN: 0x%X 0x%X\n",msb,lsb);
-	signed int val = 0;
-	if(msb>>7 == 1)
-	{
-		val = - ( ((~msb & 0x7F) << 8 | ~lsb ) + 1 );
-		printf("OUT (neg): 0x%X 0x%X\n",(~msb & 0x7F),~lsb);
-	}
-	else
-	{
-		val = (msb & 0x7F)<<8 | lsb;
-		printf("OUT (pod): 0x%X 0x%X\n",(msb & 0x7F),lsb);
-	}
-	return val;
-}
+*/

@@ -16,13 +16,15 @@
 
 class AdcDac {
 public:
-	AdcDac(U8 i2cAddr);
+	AdcDac(I2C* i2cIf, U8 deviceAddr);
 	~AdcDac();
-	U8 readAdc(void);
-	void setDac(U8 val);
+	U8 readAdc(unsigned int adcNumber);
+	void setDac(unsigned int val);
 
 private:
-	I2C mI2C;
+	I2C* mpI2C;
+	U8 mDeviceAddr;
+	U8 mControlByte;
 };
 
 

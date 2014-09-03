@@ -2,19 +2,14 @@ VPATH = ../inc
 CXX = clang++
 CXXFLAGS = -Wall -g3 
 LDLIBS = 
+DEPS = i2c.hpp imu.hpp types.hpp 
+OBJ = i2c.o imu.o 
 
-default: main.o i2c.o imu.o
-	$(CXX) $(CXXFLAGS) -o main main.o i2c.o imu.o $(LDLIBS)
+%.o: %.cpp $(DEPS)
+	$(CXX) $(CFLAGS) -c -o $@ $<
 
-main.o: i2c.hpp imu.hpp types.hpp
-	$(CXX) $(CXXFLAGS) -c main.cpp 
-
-i2c.o: i2c.hpp types.hpp
-	$(CXX) $(CXXFLAGS) -c i2c.cpp
-	
-imu.o: imu.hpp i2c.hpp types.hpp
-	$(CXX) $(CXXFLAGS) -c imu.cpp
- 
+main: $(OBJ)
+	$(CXX) $(CXXFLAGS) -o $@ $^
     
 clean:
 	rm -rf *.o

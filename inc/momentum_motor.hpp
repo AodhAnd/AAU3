@@ -13,21 +13,32 @@
 
 class MomentumMotor {
 public:
-	typedef enum
+	enum motor_state
 	{	MOTOR_STATE_IDLE,
 		MOTOR_STATE_ROTATING,
 		MOTOR_STATE_BREAKING
-	} state_t;
+	};
 
-	MomentumMotor(unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin, U8 adcDacI2cAddr);
+	struct directionPins {
+		unsigned int cw;
+		unsigned int ccw;
+	};
+
+	MomentumMotor(unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin, AdcDac* adcDac);
 	~MomentumMotor();
 
-	bool hasState(state_t state);
+	bool hasState(motor_state state);
 	void setBreak();
 	void emergencyBreak();
+	void setRpm(unsigned int rpm);
+	void startMotorController(void);
+	void stopMotorController(void);
 private:
 	BreakServo mServo;
-	AdcDac mAdcDac; //for setting the speed and reading the motorcontroller outputs
+	AdcDac* mAdcDac; //for setting the speed and reading the motorcontroller outputs
+	struct directionPins mDirectionsPins;
+	void motorController(void);
+	boost::thread mControlThread;
 };
 
 
