@@ -1,26 +1,28 @@
 /*
  * momentum_motor.cpp
  *
- *  Created on: 31/08/2014
+ *  Created on: 04/09/2014
  *      Author: benjaminkrebs
  */
 
-#include <stdio.h>
-#include <iostream>
-#include <boost/thread.hpp>
+#define RPM_MAX 1000
 
-#include "../inc/break_servo.hpp"
-#include "../inc/adc_dac.hpp"
-//this
-#include "../inc/momentum_motor.hpp"
+#include <pigpio.h>
 
 MomentumMotor::MomentumMotor(unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin, AdcDac* adcDac)
 :
 mAdcDac(adcDac),
-mServo(new BreakServo(breakServoPwmPin))
+mServo(breakServoPwmPin),
+mState(MOTOR_STATE_IDLE)
 {
 	mDirectionsPins.ccw = ccwPin;
 	mDirectionsPins.cw = cwPin;
+
+	//Set all the motor stuff such that it doesn't run!
+	stopMotorController();
+	setBreak();
+	setRpm(0);
+
 }
 
 MomentumMotor::~MomentumMotor()
@@ -28,28 +30,13 @@ MomentumMotor::~MomentumMotor()
 
 }
 
-void MomentumMotor::setRpm(unsigned int rpm, unsigned int direction) //1: cw, 0:ccw
-{
-
-}
-
-void MomentumMotor::startMotorController(void)
-{
-	mControlThread(motorController);
-}
-
-
-void MomentumMotor::motorController(void)
-{
-	std::cout << "motor controller called" <<std::endl;
-}
-
-void MomentumMotor::stopMotorController(void)
-{
-	mControlThread.join();
-}
 
 bool MomentumMotor::hasState(motor_state state)
+{
+	return mState;
+}
+
+void MomentumMotor::setDirection(motor_direction dir)
 {
 
 }
@@ -63,3 +50,27 @@ void MomentumMotor::emergencyBreak()
 {
 
 }
+
+void MomentumMotor::setRpm(unsigned int rpm)
+{
+	if(rpm>RPM_MAX)
+		mRpmSetPoint = RPM_MAX;
+	else
+		mRpmSetPoint = rpm;
+}
+
+void MomentumMotor::startMotorController(void)
+{
+
+}
+
+void MomentumMotor::stopMotorController(void)
+{
+
+}
+
+void MomentumMotor::motorController(void)
+{
+
+}
+

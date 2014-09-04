@@ -20,7 +20,7 @@ mpI2C(i2cObj),
 mI2cAddr(i2cAddr)
 {
 	setSleep(false);
-	printf("IMU at 0x%X says hello..\n",i2cAddr);
+	printf("IMU at 0x%X initialized...\n",i2cAddr);
 }
 
 Imu::~Imu()
@@ -54,32 +54,35 @@ void Imu::readByte(U8* buffer, U8 fromReg)
 	mpI2C->readI2C(buffer,1,mI2cAddr);
 }
 
+signed short Imu::readShort(U8 fromReg)
+{
+	U8 wData[2] = {0,0};
+	readData(wData,2,fromReg);
+	signed short retVal = ((signed short)(wData[0]<<8|wData[1])); //Have to switch because of endian
+	return retVal;
+}
+
+
 void Imu::readData(U8* buffer, unsigned int readLength, U8 fromReg)
 {
 	mpI2C->writeI2C(&fromReg,1,mI2cAddr);
 	mpI2C->readI2C(buffer,readLength,mI2cAddr);
 }
 
-signed int Imu::getAccX(void)
+signed short Imu::getAccX(void)
 {
-	U8 Acc[2] = {0,0};
-	readData(Acc,2,MPU6050_ACCEL_X_H);
-	return Acc;
+	return readShort(MPU6050_ACCEL_X_H);
 }
 
-signed int Imu::getAccY(void)
+signed short Imu::getAccY(void)
 {
-	U8 Acc[2] = {0,0};
-	readData(Acc,2,MPU6050_ACCEL_Y_H);
-	return Acc;
+	return readShort(MPU6050_ACCEL_Y_H);
 }
 
 
-signed int Imu::getAccZ(void)
+signed short Imu::getAccZ(void)
 {
-	U8 Acc[2] = {0,0};
-	readData(Acc,2,MPU6050_ACCEL_Z_H);
-	return Acc;
+	return readShort(MPU6050_ACCEL_Z_H);
 }
 
 /*

@@ -66,20 +66,20 @@ public:
 
 
 	//get'ers
-	signed int getAccX(void);
-	signed int getAccY(void);
-	signed int getAccZ(void);
+	signed short getAccX(void);
+	signed short getAccY(void);
+	signed short getAccZ(void);
 	accAll_t getAccAll(void);
 
 
-	signed int getGyroX(void);
-	signed int getGyroY(void);
-	signed int getGyroZ(void);
+	signed short getGyroX(void);
+	signed short getGyroY(void);
+	signed short getGyroZ(void);
 	gyroAll_t getGyroAll(void);
 
 	allSens_t getAllSens(void);
 
-	signed int getTemp(void);
+	signed short getTemp(void);
 
 	//set'ers
 	void setSleep(bool mode);
@@ -93,6 +93,7 @@ private:
 	void writeByte(U8 val, U8 fromReg);
 	void writeWord(U8 val, U8 fromReg);
 	void readByte(U8* buffer, U8 fromReg);
+	signed short readShort(U8 fromReg);
 	void readData(U8* buffer, unsigned int readLength, U8 fromReg);
 
 };
