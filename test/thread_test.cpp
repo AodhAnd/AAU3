@@ -8,6 +8,7 @@
 
 
 #include <iostream>
+#include "../inc/thread.hpp"
 
 using namespace std;
 
@@ -21,17 +22,7 @@ void threadFunc(void)
 
 int main()
 {
-	/*
-	boost::asio::io_service ioService;
-	boost::asio::deadline_timer dTimer(ioService,boost::posix_time::milliseconds(1000));
-	boost::thread testThread(threadFunc);
-	for (int i = 0; i < 1000; ++i) {
-		//testThread.start_thread();
-		dTimer.wait();
-		testThread.start_thread();
-		ioService.run();
-	}
-	testThread.join();*/
+	Thread testThread;
 
 
 

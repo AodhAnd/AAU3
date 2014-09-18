@@ -9,6 +9,7 @@
 #include <time.h>
 #include <signal.h>
 
+#include "../inc/thread.hpp"
 
 Thread::Thread()
 {

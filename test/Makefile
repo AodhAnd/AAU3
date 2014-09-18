@@ -2,9 +2,9 @@ VPATH = ../inc
 CXX = clang++
 CXXFLAGS = -Wall -g3
 LDFLAGS = -L/usr/local/lib
-LDLIBS = -lboost_thread-mt -lboost_system
-DEPS = thread_test.cpp
-OBJ = thread_test.o
+LDLIBS = 
+DEPS = ../inc/thread.hpp thread_test.cpp
+OBJ = ../src/thread.o thread_test.o
 
 %.o: %.cpp $(DEPS)
 	$(CXX) $(CFLAGS) -c -o $@ $<
