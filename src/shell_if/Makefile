@@ -10,7 +10,7 @@ OBJ = shell_client.o shell_server.o test.o
 
 test: $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
-    
+
 clean:
 	rm -rf *.o
 

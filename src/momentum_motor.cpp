@@ -7,13 +7,13 @@
 
 #define RPM_MAX 1000
 
-#include <pigpio.h>
+#include "../inc/momentum_motor.hpp"
 
-MomentumMotor::MomentumMotor(unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin, AdcDac* adcDac)
+MomentumMotor::MomentumMotor(const char* idName, unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin)
 :
-mAdcDac(adcDac),
-mServo(breakServoPwmPin),
-mState(MOTOR_STATE_IDLE)
+mState(MOTOR_STATE_IDLE),
+mName(idName),
+mShellClient(mName,this)
 {
 	mDirectionsPins.ccw = ccwPin;
 	mDirectionsPins.cw = cwPin;
@@ -38,7 +38,14 @@ bool MomentumMotor::hasState(motor_state state)
 
 void MomentumMotor::setDirection(motor_direction dir)
 {
+	switch (dir) {
+		case MOTOR_DIRECTION_CCW:
 
+			break;
+		case MOTOR_DIRECTION_CW:
+
+			break;
+	}
 }
 
 void MomentumMotor::setBreak()
@@ -74,3 +81,32 @@ void MomentumMotor::motorController(void)
 
 }
 
+
+void MomentumMotor::receiveShellCommand(string* argv,unsigned int& argc)
+{
+	if(argc == 0)
+	{
+		cout<<endl<<mName<<" commands:"<<endl;
+		cout<<"+"<<"stop"<<endl;
+		cout<<"+"<<"rpm <value>"<<endl;
+
+		cout<<endl;
+	}
+	else if(argv[1].compare("stop") == 0)
+	{
+		setRpm(0);
+	}
+	else if(argv[1].compare("rpm") == 0)
+	{
+		setRpm(atoi(argv[2].c_str()));
+	}
+	else
+	{
+		cout << mName << " received an unknown command"<<endl;
+	}
+}
+
+const char* MomentumMotor::getClientName()
+{
+	return mName;
+}

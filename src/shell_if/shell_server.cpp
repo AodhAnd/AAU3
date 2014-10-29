@@ -37,40 +37,98 @@ void ShellServer::setShellName(const char* shellName)
 void ShellServer::startShell()
 {
 	bool shellRunning = true;
-	char cmdIn[10000];
+	string* args = NULL;
+	unsigned int argv = 0;
+	string cmdStr;
 
 	while(shellRunning)
 	{
 		cout << mShellName << "# ";
-		cin >> cmdIn;
-		cout << "Command received: " << cmdIn << endl;
+		getline(cin,cmdStr);
 
-		if(strcmp(cmdIn,"stop") == 0)
+		if(shellDebug)
+			cout <<"SHELL DEBUG: " <<"Command received: " << cmdStr.c_str() << endl;
+
+		args = parseArguments(cmdStr,argv);
+
+		if(strcmp(cmdStr.c_str(),"quit") == 0 || strcmp(cmdStr.c_str(),"q") == 0)
 		{
 			shellRunning = false;
 		}
-		else if(strcmp(cmdIn,"shellStatus") == 0)
+		else if(strcmp(cmdStr.c_str(),"status") == 0)
 		{
 			cout << "Shell Name: " << mShellName << endl;
 			cout << "Nof Client: " << mNofRegisteredClients << endl;
+			for(unsigned int i=0;i<mNofRegisteredClients;i++)
+				cout << i << ". " << mClients[i].shellIf->getClientName() << endl;
+		}
+		else if(cmdStr.compare("help")==0)
+		{
+			cout<<"Shell Status:"<<endl;
+			cout << "Shell Name: " << mShellName << endl;
+			cout << "Nof Client: " << mNofRegisteredClients << endl;
+			for(unsigned int i=0;i<mNofRegisteredClients;i++)
+				cout << i << ". " << mClients[i].shellIf->getClientName() << endl;
+
+			cout<<endl<<"Shell Commands:"<<endl;
+			cout<<"+"<<"debug"<<endl;
+			cout<<"+"<<"status"<<endl;
+			cout<<"+"<<"q or quit"<<endl;
+			cout<<"+"<<"<Client Name>"<<endl;
+		}
+		else if(cmdStr.compare("debug")==0)
+		{
+			shellDebug = !shellDebug;
+			if(shellDebug)
+				cout<<"Shell Debug ON"<<endl;
+			else
+				cout<<"Shell Debug OFF"<<endl;
 		}
 		else
 		{
 			for(unsigned int i=0;i<mNofRegisteredClients;i++)
 			{
-				//if(strcmp(mClients[i].clientName,cmdIn) == 0)
+				if(strcmp(mClients[i].clientName,args[0].c_str()) == 0)
 				{
-					mClients[i].shellIf->receiveShellCommand(cmdIn);
+					if(shellDebug)
+						cout<<mClients[i].clientName<<" accepted the command"<<endl;
+					mClients[i].shellIf->receiveShellCommand(args,--argv);
 				}
 			}
 		}
 
 
 
-		memset(&cmdIn,0,10000);
+		cmdStr.clear();
+		delete [] args;
+		args = NULL;
 	}
 }
 
+
+string* ShellServer::parseArguments(string& command,unsigned int& nofCommands)
+{
+	string* args = new string[10];
+
+	int jj = 0;
+	for(unsigned int i=0;i<command.size();i++)
+	{
+		if(command.compare(i,1," ") == 0)
+		{
+			jj++;
+		}
+		else
+		{
+			if(jj<10)
+				args[jj]+= command.c_str()[i];
+			else
+				cout<<"TOO MANY ARGUMENTS"<<endl;
+		}
+	}
+	jj++;
+	nofCommands = jj;
+	return args;
+}
 
 
 bool ShellServer::registerNewClient(const char* clientName, ShellClientInterface* shell_if)
@@ -79,7 +137,7 @@ bool ShellServer::registerNewClient(const char* clientName, ShellClientInterface
 	{
 		if(strcmp(mClients[i].clientName,clientName) == 0)
 		{
-			cout<<"Clients name already registered: "<< clientName << endl;
+			cout<<"SHELL DEBUG: "<<"Clients name already registered: "<< clientName << endl;
 			return false;
 		}
 	}

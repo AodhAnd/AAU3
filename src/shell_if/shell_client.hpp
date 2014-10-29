@@ -18,7 +18,8 @@ class ShellClientInterface
 {
 public:
 	virtual ~ShellClientInterface(){};
-	virtual void receiveShellCommand(const char* cmd) = 0;
+	virtual void receiveShellCommand(string* argv,unsigned int& argc) = 0;
+	virtual const char* getClientName() = 0;
 };
 
 class ShellClient

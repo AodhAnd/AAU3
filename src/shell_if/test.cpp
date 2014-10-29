@@ -12,10 +12,15 @@ class testClass : public ShellClientInterface
 {
 
 public:
-	void receiveShellCommand(const char* cmd){
-		if(strcmp(cmd,"test")==0)
+	void receiveShellCommand(string* argv,unsigned int& argc){
+		if(argc == 0)
 		{
-			cout<<"TestClass received test command!"<<endl;
+			cout<<"TestClass commands:"<<endl;
+			cout<<"test"<<endl;
+		}
+		else if(argc > 0 && argv[1].compare("test") == 0)
+		{
+			cout<<"test command received"<<endl;
 		}
 		else
 		{
@@ -23,10 +28,15 @@ public:
 		}
 	}
 
+	const char* getClientName(){
+		return mName;
+	}
+
 private:
 	ShellClient mShellClient;
+	const char* mName;
 public:
-	testClass():mShellClient("TestClass",this){
+	testClass(const char* friendlyName):mName(friendlyName),mShellClient(friendlyName,this){
 
 	}
 
@@ -38,7 +48,8 @@ int main()
 	ShellServer* shellServer = ShellServer::getInstance();
 	shellServer->setShellName("testShell");
 
-	testClass test;
+	testClass test("test1");
+	testClass test2("test2");
 
 	shellServer->startShell();
 

@@ -8,11 +8,13 @@
 #ifndef MOMENTUMMOTOR_HPP_
 #define MOMENTUMMOTOR_HPP_
 
-#include "break_servo.hpp"
-#include "adc_dac.hpp"
+#include "../src/shell_if/shell_client.hpp"
+#include <iostream>
 
+using namespace std;
 
-class MomentumMotor {
+class MomentumMotor: public ShellClientInterface
+{
 public:
 	enum motor_state
 	{	MOTOR_STATE_IDLE,
@@ -29,7 +31,7 @@ public:
 		unsigned int ccw;
 	};
 
-	MomentumMotor(unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin, AdcDac* adcDac);
+	MomentumMotor(const char* idName, unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin);
 	~MomentumMotor();
 
 	bool hasState(motor_state state);
@@ -39,15 +41,20 @@ public:
 	void setRpm(unsigned int rpm);
 	void startMotorController(void);
 	void stopMotorController(void);
+
+public: //Implementing Shell
+	void receiveShellCommand(string* argv,unsigned int& argc);
+	const char* getClientName();
+
 private:
 	motor_state mState;
-	BreakServo mServo;
-	AdcDac* mAdcDac; //for setting the speed and reading the motorcontroller outputs
 	struct directionPins mDirectionsPins;
 
 	//Motorcontrol
 	void motorController(void);
 	unsigned int mRpmSetPoint;
+	const char* mName;
+	ShellClient mShellClient;
 
 };
 

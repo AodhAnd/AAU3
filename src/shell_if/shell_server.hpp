@@ -9,7 +9,7 @@
 #define SHELL_SERVER_HPP_
 
 #include <iostream>
-#include <string.h>
+#include <string>
 #include "shell_client.hpp"
 
 
@@ -43,6 +43,10 @@ private:
 	unsigned int mNofRegisteredClients;
 
 	const char* mShellName;
+
+	string* parseArguments(string& command,unsigned int& nofCommands);
+
+	bool shellDebug;
 };
 
 
