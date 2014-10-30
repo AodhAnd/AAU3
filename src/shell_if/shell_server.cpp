@@ -88,10 +88,10 @@ void ShellServer::startShell()
 		{
 			for(unsigned int i=0;i<mNofRegisteredClients;i++)
 			{
-				if(strcmp(mClients[i].clientName,args[0].c_str()) == 0)
+				if(strcmp(mClients[i].shellIf->getClientName(),args[0].c_str()) == 0)
 				{
 					if(shellDebug)
-						cout<<mClients[i].clientName<<" accepted the command"<<endl;
+						cout<<mClients[i].shellIf->getClientName()<<" accepted the command"<<endl;
 					mClients[i].shellIf->receiveShellCommand(args,--argv);
 				}
 			}
@@ -131,21 +131,22 @@ string* ShellServer::parseArguments(string& command,unsigned int& nofCommands)
 }
 
 
-bool ShellServer::registerNewClient(const char* clientName, ShellClientInterface* shell_if)
+bool ShellServer::registerNewClient(ShellClientInterface* shell_if)
 {
 	for(unsigned int i=0;i<mNofRegisteredClients;i++)
 	{
-		if(strcmp(mClients[i].clientName,clientName) == 0)
+		/*
+		if(strcmp(mClients[i].clientName,shell_if->getClientName()) == 0)
 		{
-			cout<<"SHELL DEBUG: "<<"Clients name already registered: "<< clientName << endl;
+			cout<<"SHELL DEBUG: "<<"Clients name already registered: "<< shell_if->getClientName() << endl;
 			return false;
-		}
+		}*/
 	}
 
-	mClients[mNofRegisteredClients].clientName = clientName;
+	mClients[mNofRegisteredClients].clientName = "";
 	mClients[mNofRegisteredClients++].shellIf = shell_if;
 
-	cout<<"Shell client registered: " << clientName << endl;
+	//cout<<"Shell client registered: " << clientName << endl;
 
 	return true;
 }
