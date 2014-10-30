@@ -7,9 +7,16 @@
 
 #ifndef CONTROLLER_HPP_
 #define CONTROLLER_HPP_
-#include <imu.hpp>
+#include "imu.hpp"
+#include "thread.hpp"
 
-class controller {
+class controller{
+public:
+	virtual void loop(Imu* pImu[], MomentumMotor* pMotor[]);
+
+};
+/*
+class controller{
 
 	/* Class should inherit from Thread.
 	 *
@@ -23,16 +30,17 @@ class controller {
 	 *The below is a suggestion for behavior.
 	 *
 	 *
-	 */
+	 *
 public:
-	controller(controller&);
+	controller(controller &cont);
 	controller(Imu* pImu[], MomentumMotor* pMotor[]);
-	~controller();
+	virtual ~controller();
 	void setPeriod(int time); // set period time in us.
 	int getPeriod();
-	virtual void loop(); // Define control loop. May contain awesome controller as default.
+	virtual void loop(void); // Define control loop. May contain awesome controller as default.
 	int start(); //Start Control loop. Returns 0 if no error?
 	void stop(); //Stop Control loop.
+
 
 
 private:
@@ -42,9 +50,10 @@ private:
 
 	int getImu(int imu); // Potentially split into different variables instead with a behind the scenes update function to guarantee that all IMUs are sampled at the same time?
 	int setMotor(int motor, int speed); //Same thing, should another function be called which actually writes motor values at the same time, at the end of the loop function?
-
+	void threadLoop();
+	Thread t;
 };
-
+*/
 
 
 #endif /* CONTROLLER_HPP_ */
