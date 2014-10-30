@@ -15,7 +15,7 @@ ShellClient::ShellClient(const char* clientName, ShellClientInterface* shell_if)
 
 	if(mShellServer != NULL)
 	{
-		mShellServer->registerNewClient(clientName,shell_if);
+		mShellServer->registerNewClient(shell_if);
 	}
 	else
 	{

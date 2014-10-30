@@ -9,7 +9,8 @@
 #define SHELL_SERVER_HPP_
 
 #include <iostream>
-#include <string>
+#include <string.h>
+#include <stdio.h>
 #include "shell_client.hpp"
 
 
@@ -22,7 +23,7 @@ class ShellServer
 public:
 	static ShellServer* getInstance();
 
-	bool registerNewClient(const char* clientName, ShellClientInterface* shell_if);
+	bool registerNewClient(ShellClientInterface* shell_if);
 
 	void startShell();
 
