@@ -2,8 +2,8 @@ VPATH =
 CXX = g++-4.6
 CXXFLAGS = -Wall -g3 
 LDLIBS = -lpthread
-DEPS = shell_client.hpp  shell_server.hpp
-OBJ = shell_client.o shell_server.o test.o
+DEPS = shell_client.hpp  shell_server.hpp AauPwmLib.hpp
+OBJ = shell_client.o shell_server.o AauPwmLib.o set.o
 
 %.o: %.cpp $(DEPS)
 	$(CXX) $(CFLAGS) -c -o $@ $<

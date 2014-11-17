@@ -12,10 +12,10 @@
 ShellClient::ShellClient(const char* clientName, ShellClientInterface* shell_if)
 {
 	mShellServer = ShellServer::getInstance();
-
 	if(mShellServer != NULL)
 	{
 		mShellServer->registerNewClient(shell_if);
+		cout << "Registered" << endl;
 	}
 	else
 	{
