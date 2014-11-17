@@ -47,6 +47,12 @@ mDuty(0){
 	}
 }
 AauPwm::~AauPwm(){
+	FILE *fp;
+	char p[200];
+	sprintf(p,"%srun",mPath);
+	fp = fopen(p,"w");
+	fprintf(fp,"%i",0);
+	fclose(fp);
 }
 
 int AauPwm::setPeriod(int Period){
