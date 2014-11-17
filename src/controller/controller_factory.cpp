@@ -7,11 +7,14 @@
 
 
 #include "controller_factory.hpp"
+#include "controller_base.hpp"
 
 
 ControllerFactory* ControllerFactory::mInstance = NULL;
+unsigned int ControllerFactory::mNumControllers = 0;
+ControllerBase* (*ControllerFactory::mCreateFuncArray[100])(string&);
 
-static ControllerFactory* ControllerFactory::getInstance()
+ControllerFactory* ControllerFactory::getInstance()
 {
 	if(mInstance == NULL)
 		return new ControllerFactory;
@@ -46,6 +49,11 @@ void ControllerFactory::receiveShellCommand(string* argv,unsigned int& argc)
 	{
 
 	}
+	else if(argv[1].compare("createController") == 0)
+	{
+		//std::string testStr("hej");
+		//ControllerBase * currentController = mCreateFuncArray[0](testStr);
+	}
 	else
 	{
 		cout << mName << " received an unknown command"<<endl;
@@ -59,18 +67,19 @@ const char* ControllerFactory::getClientName()
 
 ControllerFactory::ControllerFactory():
 mName("CtrlFactory"),
-mShell(mName,this),
-mNumControllers(0)
+mShell("CtrlFactory",this)
 {
 
 }
 
-static void ControllerFactory::registerController(createFunc)
+bool ControllerFactory::registerController(ControllerBase* (*createFunc)(string&))
 {
 	if(createFunc!=NULL)
 	{
-		functions[mNumControllers++] = createFunc;
+		mCreateFuncArray[mNumControllers++] = createFunc;
+		//std::cout<<"Controller Registered!"<<std::endl;
 	}
+	return true;
 }
 
 

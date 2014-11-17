@@ -21,8 +21,8 @@ public:
 		PosixThread* obj;
 	} thread_args_t;
 
-	PosixThread(void* (*func)(void*));
-	PosixThread(void* (*func)(void*),unsigned int periodicity_ms);
+	PosixThread(void* (*func)(void*), unsigned int prio = 50);
+	PosixThread(void* (*func)(void*),unsigned int periodicity_ms, unsigned int prio = 50);
 
 	~PosixThread();
 
@@ -48,7 +48,8 @@ private:
 	int mTimerfd;
 	unsigned long long mWakeUpsMissed;
 	thread_args_t mThreadArgs;
-
+	struct sched_param mParam;
+	unsigned int mPrio;
 };
 
 #endif /* POSIX_THREAD_HPP_ */

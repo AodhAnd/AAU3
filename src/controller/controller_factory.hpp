@@ -8,15 +8,19 @@
 #ifndef CONTROLLER_FACTORY_HPP_
 #define CONTROLLER_FACTORY_HPP_
 
+//#define REGISTER_CONTROLLER(T) void isRegistered_##T =  ControllerFactory::getInstance()->registerController(&T::createController)
+
 #include "../shell_if/shell_client.hpp"
+
+class ControllerBase;
 
 class ControllerFactory : public ShellClientInterface{
 public:
-	typedef bool (*createFunc)(string&);
+	//typedef ControllerBase* (*createFunc)(string&);
 	static ControllerFactory* getInstance();
 	~ControllerFactory();
 
-	static void registerController(createFunc);
+	static bool registerController(ControllerBase* (*createFunc)(string&));
 
 public:
 	void receiveShellCommand(string* argv,unsigned int& argc);
@@ -29,7 +33,8 @@ private:
 	ShellClient mShell;
 
 
-	static createFunc functions[100];
+	static ControllerBase* (*mCreateFuncArray[100])(string&);
+
 	static unsigned int mNumControllers;
 	const char* mName;
 

@@ -9,20 +9,32 @@
 #define CONTROLLER_TEST_HPP_
 
 #include "controller_base.hpp"
+#include <iostream>
+#include "../bbb_gpio.hpp"
+#include "../bbb_adc.hpp"
 
-class ControllerTest: public ControllerBase {
+using namespace std;
+
+class ControllerTest: public ControllerCbIf,public ControllerBase {
 public:
 	ControllerTest();
+	~ControllerTest(){}
 
-	static string getControllerNameStatic();
+	static const char* getControllerNameStatic();
+	static unsigned int getPeriodicityMsStatic();
+	static ControllerBase* createController(string& name);
 
-public: //Implementing ControllerBase
-	string getControllerName();
+
+public: //Implementing ControllerCbIf
+	unsigned int getPeriodicityMs();
+	const char* getControllerName();
 	void writeDebug();
-	void runController();
+	void runController(ControllerArgs* args);
 
 private:
 	string mControllerName;
+	BbbGpio gpio60;
+	BbbAdc adc0;
 };
 
 

@@ -10,35 +10,78 @@
 
 #include <iostream>
 #include "../shell_if/shell_client.hpp"
+#include "controller_factory.hpp"
+#include "../posix_thread/posix_thread.hpp"
+#include "../../inc/i2c.hpp"
+#include "../../inc/imu.hpp"
+
 
 using namespace std;
 
-class controllerInterface
+class ControllerCbIf;
+
+class ControllerArgs
 {
 public:
-	virtual ~controllerInterface();
-	virtual string getControllerName() = 0;
-	virtual void writeDebug() = 0;
-	virtual void runController() = 0;
+	ControllerArgs(Imu *imu1,ControllerCbIf* pControllerIf, bool *debugEnable)
+	:
+	mImu1(imu1),
+	mpControllerIf(pControllerIf),
+	mDebugEnable(debugEnable)
+	{
+
+	}
+	~ControllerArgs() {}
+
+	ControllerCbIf* mpControllerIf;
+	Imu *mImu1;
+	bool *mDebugEnable;
 };
+
+
+class ControllerCbIf
+{
+public:
+	virtual ~ControllerCbIf()
+	{}
+
+	virtual const char* getControllerName() = 0;
+	virtual void writeDebug() = 0;
+	virtual void runController(ControllerArgs* args) = 0;
+	virtual unsigned int getPeriodicityMs() = 0;
+};
+
 
 class ControllerBase : public ShellClientInterface {
 public:
+
+
+
+
 	/*
 	 * Controllers inheriting the base class must implement a creation function having this outline:
 	 * static bool createController(string controllerName);
 	 */
-	ControllerBase(controllerInterface* pControllerIf);
+	ControllerBase(ControllerCbIf* pControllerIf);
 	virtual ~ControllerBase();
 
-
+	void* controller(void* args);
+	static void* controllerStatic(void* args);
 
 public: // Implementing ShellClientInterface
 	void receiveShellCommand(string* argv,unsigned int& argc);
 	const char* getClientName();
 
 private:
+	bool mDebugEnable;
+	ControllerCbIf* mpControllerIf;
 	ShellClient mShell;
+	PosixThread* mpThread;
+	I2C mI2c;
+	Imu mImu1;
+	//Imu mImu2;
+
+	ControllerArgs mControllerArgs;
 };
 
 

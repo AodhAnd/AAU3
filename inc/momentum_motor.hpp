@@ -9,7 +9,10 @@
 #define MOMENTUMMOTOR_HPP_
 
 #include "../src/shell_if/shell_client.hpp"
+#include <stdlib.h>
 #include <iostream>
+#include "../src/bbb_gpio.hpp"
+#include "../src/bbb_adc.hpp"
 
 using namespace std;
 
@@ -26,12 +29,7 @@ public:
 		MOTOR_DIRECTION_CCW
 	};
 
-	struct directionPins {
-		unsigned int cw;
-		unsigned int ccw;
-	};
-
-	MomentumMotor(const char* idName, unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin);
+	MomentumMotor(const char* idName,BbbGpio::gpio_port_t gpioPort, BbbAdc::analog_in_t analogIn);
 	~MomentumMotor();
 
 	bool hasState(motor_state state);
@@ -39,6 +37,7 @@ public:
 	void setDirection(motor_direction dir);
 	void emergencyBreak();
 	void setRpm(unsigned int rpm);
+	signed int getRpm();
 	void startMotorController(void);
 	void stopMotorController(void);
 
@@ -48,13 +47,11 @@ public: //Implementing Shell
 
 private:
 	motor_state mState;
-	struct directionPins mDirectionsPins;
-
-	//Motorcontrol
-	void motorController(void);
-	unsigned int mRpmSetPoint;
 	const char* mName;
 	ShellClient mShellClient;
+	BbbGpio mEnableGpio;
+	BbbAdc mRpmAdc;
+
 
 };
 

@@ -9,15 +9,14 @@
 
 #include "../inc/momentum_motor.hpp"
 
-MomentumMotor::MomentumMotor(const char* idName, unsigned int cwPin, unsigned int ccwPin,unsigned int breakServoPwmPin)
+MomentumMotor::MomentumMotor(const char* idName, BbbGpio::gpio_port_t gpioPort, BbbAdc::analog_in_t analogIn)
 :
 mState(MOTOR_STATE_IDLE),
 mName(idName),
-mShellClient(mName,this)
+mShellClient(mName,this),
+mEnableGpio(gpioPort,false,BbbGpio::BBB_GPIO_DIRECTION_OUT),
+mRpmAdc(analogIn)
 {
-	mDirectionsPins.ccw = ccwPin;
-	mDirectionsPins.cw = cwPin;
-
 	//Set all the motor stuff such that it doesn't run!
 	stopMotorController();
 	setBreak();
@@ -53,6 +52,14 @@ void MomentumMotor::setBreak()
 
 }
 
+signed int MomentumMotor::getRpm()
+{
+	signed int rv = 0;
+	//ADD SOME CALCULATIONS OF RPM
+	rv = mRpmAdc.get();
+	return rv;
+}
+
 void MomentumMotor::emergencyBreak()
 {
 
@@ -60,10 +67,7 @@ void MomentumMotor::emergencyBreak()
 
 void MomentumMotor::setRpm(unsigned int rpm)
 {
-	if(rpm>RPM_MAX)
-		mRpmSetPoint = RPM_MAX;
-	else
-		mRpmSetPoint = rpm;
+
 }
 
 void MomentumMotor::startMotorController(void)

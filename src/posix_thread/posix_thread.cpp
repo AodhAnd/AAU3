@@ -17,13 +17,14 @@ using namespace std;
 #endif
 
 
-PosixThread::PosixThread(void* (*func)(void*))
+PosixThread::PosixThread(void* (*func)(void*), unsigned int prio)
 :
 mIsPeriodic(false),
 mPeriodicityUs(0),
 mThreadStop(false),
 mWakeUpsMissed(0),
-mTimerfd(-1)
+mTimerfd(-1),
+mPrio(prio)
 {
 	mThreadArgs.args = NULL;
 	mThreadArgs.obj = this;
@@ -34,13 +35,14 @@ mTimerfd(-1)
 		DEBUG_MSG("Function pointer is NULL");
 }
 
-PosixThread::PosixThread(void* (*func)(void*),unsigned int periodicity_us)
+PosixThread::PosixThread(void* (*func)(void*),unsigned int periodicity_us, unsigned int prio)
 :
 mIsPeriodic(true),
 mPeriodicityUs(periodicity_us),
 mThreadStop(false),
 mWakeUpsMissed(0),
-mTimerfd(-1)
+mTimerfd(-1),
+mPrio(prio)
 {
 
 	mThreadArgs.args = NULL;
@@ -63,6 +65,9 @@ void PosixThread::startThread()
 		pthread_create(&mPthreadStruct,NULL,&staticPeriodicThread,&mThreadArgs);
 	else
 		pthread_create(&mPthreadStruct,NULL,mFunc,&mThreadArgs);
+
+	mParam.sched_priority = mPrio;
+	pthread_setschedparam(mPthreadStruct, SCHED_FIFO, &mParam);
 }
 
 void PosixThread::startThread(void* args)
@@ -73,6 +78,9 @@ void PosixThread::startThread(void* args)
 		pthread_create(&mPthreadStruct,NULL,&staticPeriodicThread,&mThreadArgs);
 	else
 		pthread_create(&mPthreadStruct,NULL,mFunc,&mThreadArgs);
+
+	mParam.sched_priority = mPrio;
+	pthread_setschedparam(mPthreadStruct, SCHED_FIFO, &mParam);
 }
 
 void PosixThread::stopThread()
