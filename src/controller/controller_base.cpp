@@ -18,9 +18,11 @@ mpThread(NULL),
 mI2c(IMU1_PATH),
 mImu1(0x69,&mI2c),
 mImu2(0x68,&mI2c),
-mMotor("m",BbbGpio::BBB_GPIO_2,BbbAdc::AIN3,9,14,8,13),
+mMotor("m",BbbGpio::BBB_GPIO_2,9,14,8,13),
 mPotAdc(BbbAdc::AIN5),
-mControllerArgs(&mImu1,&mImu2,&mMotor,&mPotAdc,mpControllerIf,&mDebugEnable)
+mMotorRpm(BbbAdc::AIN3),
+mMotorPower(BbbAdc::AIN1),
+mControllerArgs(&mImu1,&mImu2,&mMotor,&mPotAdc,&mMotorRpm,&mMotorPower,mpControllerIf,&mDebugEnable)
 {
 //mShell(mpControllerIf->getControllerName(),this),
 

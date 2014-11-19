@@ -30,14 +30,13 @@ public:
 		MOTOR_DIRECTION_CCW
 	};
 
-	MomentumMotor(const char* idName,BbbGpio::gpio_port_t gpioPort, BbbAdc::analog_in_t analogIn, int pwmMotorP, int pwmMotorPin, int pwmServoP, int pwmServoPin);
+	MomentumMotor(const char* idName,BbbGpio::gpio_port_t gpioPort, int pwmMotorP, int pwmMotorPin, int pwmServoP, int pwmServoPin);
 	~MomentumMotor();
 
 	bool hasState(motor_state state);
 	void setBreak(bool enable);
 	void emergencyBreak();
 	void setRpm(signed int rpm);
-	signed int getRpm();
 	void startMotorController(void);
 	void stopMotorController(void);
 
@@ -50,7 +49,6 @@ private:
 	const char* mName;
 	ShellClient mShellClient;
 	BbbGpio mEnableGpio;
-	BbbAdc mRpmAdc;
 	AauPwm mServoPwm;
 	AauPwm mMotorPwm;
 

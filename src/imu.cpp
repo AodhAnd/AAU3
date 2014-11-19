@@ -85,6 +85,23 @@ signed short Imu::getAccZ(void)
 	return readShort(MPU6050_ACCEL_Z_H);
 }
 
+
+signed short Imu::getGyroX(void)
+{
+	return readShort(MPU6050_GYRO_X_H);
+}
+
+signed short Imu::getGyroY(void)
+{
+	return readShort(MPU6050_GYRO_Y_H);
+}
+
+
+signed short Imu::getGyroZ(void)
+{
+	return readShort(MPU6050_GYRO_Z_H);
+}
+
 /*
 Imu::accAll_t Imu::getAccAll(void)
 {

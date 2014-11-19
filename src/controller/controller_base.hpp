@@ -24,12 +24,14 @@ class ControllerCbIf;
 class ControllerArgs
 {
 public:
-	ControllerArgs(Imu *imu1,Imu *imu2,MomentumMotor *motor, BbbAdc *potAdc, ControllerCbIf* pControllerIf, bool *debugEnable)
+	ControllerArgs(Imu *imu1,Imu *imu2,MomentumMotor *motor, BbbAdc *potAdc, BbbAdc *motorAdc1, BbbAdc *motorAdc2, ControllerCbIf* pControllerIf, bool *debugEnable)
 	:
 	mImu1(imu1),
 	mImu2(imu2),
 	mMotor(motor),
 	mPotAdc(potAdc),
+	mMotorAdc1(motorAdc1),
+	mMotorAdc2(motorAdc2),
 	mpControllerIf(pControllerIf),
 	mDebugEnable(debugEnable)
 	{
@@ -42,6 +44,8 @@ public:
 	Imu *mImu2;
 	MomentumMotor *mMotor;
 	BbbAdc *mPotAdc;
+	BbbAdc *mMotorAdc1;
+	BbbAdc *mMotorAdc2;
 	bool *mDebugEnable;
 };
 
@@ -88,6 +92,8 @@ private:
 	Imu mImu1;
 	Imu mImu2;
 	BbbAdc mPotAdc;
+	BbbAdc mMotorRpm;
+	BbbAdc mMotorPower;
 	MomentumMotor mMotor;
 	//Imu mImu2;
 

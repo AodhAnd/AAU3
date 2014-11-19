@@ -23,7 +23,7 @@ const char* ControllerTest::getControllerNameStatic()
 
 unsigned int ControllerTest::getPeriodicityMsStatic()
 {
-	return 5000*2;
+	return 5000;
 }
 
 
@@ -50,9 +50,30 @@ void ControllerTest::runController(ControllerArgs* args)
 	std::cout<<"TestCtrl::runController()"<<std::endl;
 
 	//Read parameters
-	int xAcc = args->mImu1->getAccX();
-	int yAcc = args->mImu1->getAccY();
-	int zAcc = args->mImu1->getAccZ();
+	int xAcc1 = args->mImu1->getAccX();
+	int yAcc1 = args->mImu1->getAccY();
+	//int zAcc1 = args->mImu1->getAccZ();
+	//int gyroX1 = args->mImu1->getGyroX();
+	//int gyroY1 = args->mImu1->getGyroY();
+	int gyroZ1 = args->mImu1->getGyroZ();
+
+	int xAcc2 = args->mImu2->getAccX();
+	int yAcc2 = args->mImu2->getAccY();
+	//int zAcc2 = args->mImu2->getAccZ();
+	//int gyroX2 = args->mImu2->getGyroX();
+	//int gyroY2 = args->mImu2->getGyroY();
+	int gyroZ2 = args->mImu2->getGyroZ();
+
+
+	int potAdc = args->mPotAdc->get();
+	int rpmAdc = args->mMotorAdc1->get();
+	int powerAdc = args->mMotorAdc2->get();
+
+	int potDeg = (-(potAdc-1800))*(470/90)-45;
+
+	std::cout << "Power: " << powerAdc << " RPM: " << rpmAdc << " POT:" << potDeg <<  std::endl;
+	std::cout << "X:" << xAcc1 << "/" << xAcc2 << " Y:" << yAcc1 << "/" << yAcc2 << std::endl;
+	std::cout << "Z:" << gyroZ1 << "/" << gyroZ2 << std::endl;
 
 
 	//Controller stuff

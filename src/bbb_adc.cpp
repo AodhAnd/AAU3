@@ -11,7 +11,7 @@
 BbbAdc::BbbAdc(analog_in_t analogIn)
 {
 
-	sprintf(mPath,"/sys/devices/ocp.3/helper.15/AIN%d",analogIn);
+	sprintf(mPath,"/sys/devices/ocp.3/helper.18/AIN%d",analogIn);
 	mAdc_fd = open(mPath,O_RDONLY);
 	if(mAdc_fd <0)
 		perror("ADC file open");

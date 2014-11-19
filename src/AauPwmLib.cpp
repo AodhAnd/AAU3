@@ -19,7 +19,7 @@ mDuty(0){
 	case 8:
 		switch(numPin){
 		case 13:
-			mPath ="/sys/devices/ocp.3/pwm_test_P8_13.16/";
+			mPath ="/sys/devices/ocp.3/pwm_test_P8_13.15/";
 			break;
 		default:
 			cout << "PWM: numPin not recognized. May not be set up" <<endl;
@@ -29,10 +29,10 @@ mDuty(0){
 	case 9:
 		switch(numPin){
 		case 14:
-			mPath ="/sys/devices/ocp.3/pwm_test_P9_14.17/";
+			mPath ="/sys/devices/ocp.3/pwm_test_P9_14.16/";
 			break;
 		case 16:
-			mPath ="/sys/devices/ocp.3/pwm_test_P9_16.18/";
+			mPath ="/sys/devices/ocp.3/pwm_test_P9_16.17/";
 			break;
 		case 22:
 			mPath ="/sys/devices/ocp.3/pwm_test_P9_22.15/";

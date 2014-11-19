@@ -1,5 +1,5 @@
 VPATH = ../inc
-CXX = g++
+CXX = g++-4.6
 CXXFLAGS = -std=c++11 -Wall -g3 
 LDLIBS = -lpthread
 DEPS = shell_if/shell_server.hpp shell_if/shell_client.hpp momentum_motor.hpp

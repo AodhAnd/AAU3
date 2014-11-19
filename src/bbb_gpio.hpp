@@ -22,7 +22,7 @@ public:
 	typedef enum
 	{
 		BBB_GPIO_15 = 15,
-		BBB_GPIO_114 = 14,
+		BBB_GPIO_114 = 114,
 		BBB_GPIO_113 = 113,
 		BBB_GPIO_2 = 2,
 		BBB_GPIO_60 = 60
