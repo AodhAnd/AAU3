@@ -85,7 +85,9 @@ void ControllerTest::runController(ControllerArgs* args)
 		x = x*y;
 	}
 
-
+	static bool enableSchedIO = false;
+	enableSchedIO = !enableSchedIO;
+	args->mAwesomeGpio->setValue(enableSchedIO);
 	//Set motor parameters
 
 }

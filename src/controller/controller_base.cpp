@@ -22,7 +22,8 @@ mMotor("m",BbbGpio::BBB_GPIO_2,9,14,8,13),
 mPotAdc(BbbAdc::AIN5),
 mMotorRpm(BbbAdc::AIN3),
 mMotorPower(BbbAdc::AIN1),
-mControllerArgs(&mImu1,&mImu2,&mMotor,&mPotAdc,&mMotorRpm,&mMotorPower,mpControllerIf,&mDebugEnable)
+mAwesomeGpio(BbbGpio::BBB_GPIO_60, false, BbbGpio::BBB_GPIO_DIRECTION_OUT),
+mControllerArgs(&mImu1,&mImu2,&mMotor,&mPotAdc,&mMotorRpm,&mMotorPower,mpControllerIf,&mDebugEnable,&mAwesomeGpio)
 {
 //mShell(mpControllerIf->getControllerName(),this),
 
