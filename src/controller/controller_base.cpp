@@ -17,7 +17,10 @@ mDebugEnable(false),
 mpThread(NULL),
 mI2c(IMU1_PATH),
 mImu1(0x69,&mI2c),
-mControllerArgs(&mImu1,mpControllerIf,&mDebugEnable)
+mImu2(0x68,&mI2c),
+mMotor("m",BbbGpio::BBB_GPIO_2,BbbAdc::AIN3,9,14,8,13),
+mPotAdc(BbbAdc::AIN5),
+mControllerArgs(&mImu1,&mImu2,&mMotor,&mPotAdc,mpControllerIf,&mDebugEnable)
 {
 //mShell(mpControllerIf->getControllerName(),this),
 

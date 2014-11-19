@@ -33,7 +33,6 @@ int main()
 
 
 	//**********************************************
-	//MomentumMotor motor("motor1",1,1,1);
 
 
 	//initiate the threads

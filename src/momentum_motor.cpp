@@ -5,23 +5,31 @@
  *      Author: benjaminkrebs
  */
 
-#define RPM_MAX 1000
+#define RPM_MAX 5000
 
 #include "../inc/momentum_motor.hpp"
 
-MomentumMotor::MomentumMotor(const char* idName, BbbGpio::gpio_port_t gpioPort, BbbAdc::analog_in_t analogIn)
+MomentumMotor::MomentumMotor(const char* idName, BbbGpio::gpio_port_t gpioPort, BbbAdc::analog_in_t analogIn, int pwmMotorP, int pwmMotorPin, int pwmServoP, int pwmServoPin)
 :
 mState(MOTOR_STATE_IDLE),
 mName(idName),
 mShellClient(mName,this),
 mEnableGpio(gpioPort,false,BbbGpio::BBB_GPIO_DIRECTION_OUT),
-mRpmAdc(analogIn)
+mRpmAdc(analogIn),
+mServoPwm(pwmServoP,pwmServoPin),
+mMotorPwm(pwmMotorP,pwmMotorPin)
 {
 	//Set all the motor stuff such that it doesn't run!
 	stopMotorController();
-	setBreak();
+	setBreak(false);
 	setRpm(0);
 
+	mServoPwm.setDuty(0);
+	mServoPwm.setPeriod(20000000); //50 Hz
+	mMotorPwm.setDuty(0);
+	mMotorPwm.setPeriod(250000); // 4 kHz
+
+	mEnableGpio.setValue(true);
 }
 
 MomentumMotor::~MomentumMotor()
@@ -35,20 +43,18 @@ bool MomentumMotor::hasState(motor_state state)
 	return mState;
 }
 
-void MomentumMotor::setDirection(motor_direction dir)
+void MomentumMotor::setBreak(bool enable)
 {
-	switch (dir) {
-		case MOTOR_DIRECTION_CCW:
-
-			break;
-		case MOTOR_DIRECTION_CW:
-
-			break;
+	if(enable)
+	{
+		mEnableGpio.setValue(false);
+		mServoPwm.setDuty(20000000-145*10000);
 	}
-}
-
-void MomentumMotor::setBreak()
-{
+	else
+	{
+		mEnableGpio.setValue(true);
+		mServoPwm.setDuty(20000000-12*100000);
+	}
 
 }
 
@@ -65,9 +71,25 @@ void MomentumMotor::emergencyBreak()
 
 }
 
-void MomentumMotor::setRpm(unsigned int rpm)
+void MomentumMotor::setRpm(signed int rpm)
 {
+	setBreak(false);
+	if(rpm > RPM_MAX)
+		rpm = RPM_MAX;
+	else if(-rpm > RPM_MAX)
+		rpm = -RPM_MAX;
 
+	double rpmVal = 0;
+	rpmVal = 50+(double)rpm/5000*50;
+
+	/*
+	if(rpm == 0)
+		mEnableGpio.setValue(false);
+	else
+
+*/
+	mMotorPwm.setPercent(rpmVal);
+	mEnableGpio.setValue(true);
 }
 
 void MomentumMotor::startMotorController(void)
@@ -79,12 +101,6 @@ void MomentumMotor::stopMotorController(void)
 {
 
 }
-
-void MomentumMotor::motorController(void)
-{
-
-}
-
 
 void MomentumMotor::receiveShellCommand(string* argv,unsigned int& argc)
 {
@@ -98,11 +114,19 @@ void MomentumMotor::receiveShellCommand(string* argv,unsigned int& argc)
 	}
 	else if(argv[1].compare("stop") == 0)
 	{
-		setRpm(0);
+		mEnableGpio.setValue(false);
+	}
+	else if(argv[1].compare("break") == 0)
+	{
+		setBreak(true);
 	}
 	else if(argv[1].compare("rpm") == 0)
 	{
 		setRpm(atoi(argv[2].c_str()));
+	}
+	else if(argv[1].compare("servo") == 0)
+	{
+		mServoPwm.setDuty(20000000-atoi(argv[2].c_str())*100000);
 	}
 	else
 	{

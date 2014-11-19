@@ -11,9 +11,7 @@
 
 ControllerTest::ControllerTest()
 :
-ControllerBase(this),
-gpio60(BbbGpio::BBB_GPIO_2,false,BbbGpio::BBB_GPIO_DIRECTION_OUT),
-adc0(BbbAdc::AIN0)
+ControllerBase(this)
 {
 	ControllerFactory::registerController(&createController);
 }
@@ -68,8 +66,7 @@ void ControllerTest::runController(ControllerArgs* args)
 
 
 	//Set motor parameters
-	gpio60.setValue(value);
-	std::cout << "ADC: " << adc0.get() << std::endl;
+
 }
 
 ControllerBase* ControllerTest::createController(string& name)

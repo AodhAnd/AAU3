@@ -14,6 +14,7 @@
 #include "../posix_thread/posix_thread.hpp"
 #include "../../inc/i2c.hpp"
 #include "../../inc/imu.hpp"
+#include "../../inc/momentum_motor.hpp"
 
 
 using namespace std;
@@ -23,9 +24,12 @@ class ControllerCbIf;
 class ControllerArgs
 {
 public:
-	ControllerArgs(Imu *imu1,ControllerCbIf* pControllerIf, bool *debugEnable)
+	ControllerArgs(Imu *imu1,Imu *imu2,MomentumMotor *motor, BbbAdc *potAdc, ControllerCbIf* pControllerIf, bool *debugEnable)
 	:
 	mImu1(imu1),
+	mImu2(imu2),
+	mMotor(motor),
+	mPotAdc(potAdc),
 	mpControllerIf(pControllerIf),
 	mDebugEnable(debugEnable)
 	{
@@ -35,6 +39,9 @@ public:
 
 	ControllerCbIf* mpControllerIf;
 	Imu *mImu1;
+	Imu *mImu2;
+	MomentumMotor *mMotor;
+	BbbAdc *mPotAdc;
 	bool *mDebugEnable;
 };
 
@@ -79,6 +86,9 @@ private:
 	PosixThread* mpThread;
 	I2C mI2c;
 	Imu mImu1;
+	Imu mImu2;
+	BbbAdc mPotAdc;
+	MomentumMotor mMotor;
 	//Imu mImu2;
 
 	ControllerArgs mControllerArgs;

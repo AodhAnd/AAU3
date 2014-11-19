@@ -33,8 +33,6 @@ public: //Implementing ControllerCbIf
 
 private:
 	string mControllerName;
-	BbbGpio gpio60;
-	BbbAdc adc0;
 };
 
 

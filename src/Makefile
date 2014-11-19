@@ -27,6 +27,9 @@ OBJ += bbb_gpio.o
 DEPS += bbb_adc.hpp
 OBJ += bbb_adc.o
 
+DEPS += AauPwmLib.hpp
+OBJ += AauPwmLib.o
+
 %.o: %.cpp $(DEPS)
 	$(CXX) $(CFLAGS) -c -o $@ $<
 
